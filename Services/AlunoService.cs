@@ -23,6 +23,12 @@ public class AlunoService : IAlunoService
         //}
     }
 
+    public async Task<IQueryable<Aluno>> GetAlunosQueryable()
+    {   
+        var alunos = await _context.Alunos.ToListAsync();
+        return alunos.AsQueryable();
+    }
+
     public async Task<List<Aluno>> GetAlunos()
     {
         return await _context.Alunos.ToListAsync();

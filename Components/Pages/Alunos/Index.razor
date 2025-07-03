@@ -1,5 +1,9 @@
 ﻿@page "/alunos"
 @rendermode InteractiveServer
+@using Icons = Microsoft.FluentUI.AspNetCore.Components.Icons
+
+<h3>Alunos</h3>
+
 
 @if (alunos == null)
 {
@@ -7,13 +11,6 @@
 }
 else
 {
-   @*  <FluentStack>
-        <FluentButton Appearance="Appearance.Neutral"
-                      IconStart="@Icon.FromImageUrl("/images/add.svg")"> 
-            Novo Aluno
-        </FluentButton>
-    </FluentStack> *@
-
     <FluentStack HorizontalAlignment="HorizontalAlignment.End">
         <FluentAnchor Href="/aluno-form"
                       IconStart="@(new Icons.Regular.Size24.PersonAdd().WithColor(Color.Success))">
@@ -21,16 +18,18 @@ else
         </FluentAnchor>
     </FluentStack>
 
+    <FluentSearch @bind-Value="valueSearch" Label="Search for alunos" @onchange="@(e => searchGrid(e))" AutoComplete="off" />
+    
     <div class="grid">
-    <FluentDataGrid Id="alunogrid" Items=@alunos TGridItem=Aluno Pagination="@pagination">
+        <FluentDataGrid Id="alunogrid" Items=@alunos TGridItem=Aluno Pagination="@pagination" MultiLine="true">
            <TemplateColumn Title="Avatar" Align="Align.Start">
                 @if (@context.Foto is not null)
                 {
-                    <FluentPersona ImageSize ="50px" Image="@context.Foto" />
+                    <FluentPersona ImageSize ="50px" Image="@context.Foto"/>
                 }
                 else
                 {
-                    <FluentPersona ImageSize="50px"  Initials="@context!.Nome[0]!.ToString().ToUpper()" />
+                    <FluentPersona ImageSize="50px" />
                 }
             </TemplateColumn>
         <PropertyColumn Title="Nome" Property="@(c => c!.Nome)" Sortable="true" Align=Align.Start/>
@@ -46,6 +45,7 @@ else
         </TemplateColumn>
     </FluentDataGrid>
     </div>
+
     <br />
     <div class="page-buttons" >
        
@@ -66,7 +66,28 @@ else
 }
 
 @code {
+    public string? valueSearch;
     private IQueryable<Aluno>? alunos;
+
+    private async void searchGrid(ChangeEventArgs e)
+    {
+        valueSearch = e.Value?.ToString();
+
+        if (string.IsNullOrWhiteSpace(valueSearch))
+        {
+            alunos = await _alunoService.GetAlunosQueryable();
+        }
+        else
+        {
+            var todos = await _alunoService.GetAlunosQueryable();
+            alunos = todos.Where(a =>
+                (!string.IsNullOrEmpty(a.Nome) && a.Nome.Contains(valueSearch, StringComparison.OrdinalIgnoreCase)) ||
+                (!string.IsNullOrEmpty(a.Email) && a.Email.Contains(valueSearch, StringComparison.OrdinalIgnoreCase))
+            );
+        }
+        StateHasChanged();
+    }
+
 
     PaginationState pagination = new PaginationState { ItemsPerPage = 3 };
 
@@ -90,8 +111,7 @@ else
 
     private async Task CarregaAlunos()
     {
-        var alunosList = await _alunoService.GetAlunos();
-        alunos = alunosList?.AsQueryable();
+        alunos = await _alunoService.GetAlunosQueryable();         
     }
 
     private async Task ConfirmarExclusao(int id)
@@ -111,6 +131,8 @@ else
             ToastService.ShowInfo($"Operação cancelada");
         }
     }
+
+    
 
     private async Task Delete(int id)
     {

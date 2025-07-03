@@ -1,11 +1,13 @@
-﻿@rendermode InteractiveServer
+﻿@using Icons = Microsoft.FluentUI.AspNetCore.Components.Icons
+@rendermode InteractiveServer
 
 <div class="navmenu">
     <input type="checkbox" id="navmenu-toggle" />
     <nav class="sitenav" aria-labelledby="main-menu" onclick="document.getElementById('navmenu-toggle').click();">
         <FluentNavMenu Id="main-menu" Width="150" Collapsible="true" Title="Navigation menu" @bind-Expanded="expanded">
-            <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent">Home</FluentNavLink>
-            <FluentNavLink Href="alunos" Icon="@(new Icons.Regular.Size20.Database())" IconColor="Color.Accent">Alunos</FluentNavLink>
+            <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size24.Home())" IconColor="Color.Accent">Home</FluentNavLink>
+            <FluentNavLink Href="alunos" Icon="@(new Icons.Regular.Size24.People())" IconColor="Color.Accent">Alunos</FluentNavLink>
+            <FluentNavLink Href="charts" Icon="@(new Icons.Regular.Size24.ChartPerson())" IconColor="Color.Accent">Charts</FluentNavLink>
         </FluentNavMenu>
     </nav>
 </div>

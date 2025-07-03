@@ -9,4 +9,5 @@ public interface IAlunoService
     Task<Aluno> AddAluno(Aluno aluno);
     Task<Aluno> UpdateAluno(Aluno aluno);
     Task<Aluno> DeleteAluno(int id);
+    Task<IQueryable<Aluno>> GetAlunosQueryable();
 }
