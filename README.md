@@ -1,3 +1,5 @@
+![image](https://github.com/user-attachments/assets/ee9f52f4-a441-484b-b5a9-6fe65e58cddd)
+
 Instalar templates de projeto com Fluent UI :
 
 dotnet new install Microsoft.FluentUI.AspNetCore.Templates
